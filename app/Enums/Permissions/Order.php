@@ -2,9 +2,17 @@
 
 namespace App\Enums\Permissions;
 
-enum Category: string
+enum Order: string
 {
-    case PUBLISH = 'publish category';
-    case DELETE = 'delete category';
-    case EDIT = 'edit category';
+    case DELETE = 'delete order';
+    case EDIT = 'edit order';
+
+    public static function values(): array
+    {
+        foreach (self::cases() as $case) {
+            $values[] = $case->value;
+        }
+
+        return $values;
+    }
 }

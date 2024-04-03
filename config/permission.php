@@ -183,4 +183,18 @@ return [
 
         'store' => 'default',
     ],
+
+    'rules' => [
+        'products' => [
+            'publish' => \App\Enums\Permissions\Product::PUBLISH->value,
+            'edit' => \App\Enums\Permissions\Product::EDIT->value,
+            'delete' => \App\Enums\Permissions\Product::DELETE->value,
+        ],
+
+        'categories' => [
+            'publish' => \App\Enums\Permissions\Category::PUBLISH->value,
+            'edit' => \App\Enums\Permissions\Category::EDIT->value,
+            'delete' => \App\Enums\Permissions\Category::DELETE->value,
+        ]
+    ]
 ];
