@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'phone' => fake()->unique()->e164PhoneNumber(),
             'birthday' => fake()->unique()->dateTimeBetween('-70 years', '-20 years')->format('Y-m-d'),
             'email_verified_at' => now(),
-            'password' => Hash::make(static::$password ??='password'), // password
+            'password' => Hash::make(static::$password ??='password'),
             'remember_token' => Str::random(10),
         ];
     }
