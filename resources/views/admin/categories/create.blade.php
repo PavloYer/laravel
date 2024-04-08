@@ -1,40 +1,87 @@
-@extends('layouts.admin')
+{{--@extends('layouts.admin')
 
 @section('content')
 
     <div class=card-header>
-        <h3 class="text-center fw-semibold">Categories</h3>
+        <h3 class="text-center fw-semibold">Create new category</h3>
     </div>
-    <hr>
+    <form action="{{route('admin.categories.store')}}" method="POST" class="w-50 m-auto">
+        @csrf
+        <div class="mb-3">
+            <label for="name" class="form-label">Category name:</label>
+            <input type="text" class="form-control" id="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="parent_id">fd</label><select name="parent_id" id="parent_id" class="form-select">
+                <option value=""></option>
+                @foreach($categories as $category)
+                    <option value="{{$category->id}}">{{$category->name}}</option>
+                @endforeach
+            </select>
+        </div>
 
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+@endsection--}}
+
+@extends('layouts.admin')
+
+@section('content')
     <div class="container">
-        <table class="table table-dark table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Parent</th>
-                <th>Usage</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($categories as $category)
-                <tr>
-                    <td>{{$category->id}}</td>
-                    <td>{{$category->name}}</td>
-                    <td>{{$category->parent->name ?? '-'}}</td>
-                    <td>{{$category->product_count}}</td>
-                    <td>r-</td>
-                </tr>
-            @endforeach
+        <div class="row">
+            <div class="col-12 mt-5">
+                <form action="{{route('admin.categories.store')}}" method="POST" class="d-flex align-items-center justify-content-center">
+                    <div class="card w-50">
+                        <div class="card-header text-center">
+                            <h3>Create new category</h3>
+                        </div>
+                        <div class="card-body">
+                            @csrf
 
-            </tbody>
-        </table>
+                            <div class="row mb-3">
+                                <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
 
-        {{$categories->links()}}
+                                <div class="col-md-6">
+                                    <input id="name" type="text"
+                                           class="form-control @error('name') is-invalid @enderror" name="name"
+                                           value="{{ old('name') }}" required autofocus>
+
+                                    @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="parent_id"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('Parent Category') }}</label>
+
+                                <div class="col-md-6">
+                                    <select name="parent_id" id="parent_id"
+                                            class="form-control @error('parent_id') is-invalid @enderror">
+                                        <option value=""></option>
+                                        @foreach($categories as $category)
+                                            <option value="{{$category->id}}">{{$category->name}}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('parent_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-end">
+                            <button type="submit" class="btn btn-outline-primary">Create</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
-
-
 @endsection
