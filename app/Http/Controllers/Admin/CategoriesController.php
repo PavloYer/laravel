@@ -81,6 +81,8 @@ class CategoriesController extends Controller
 
         $category->deleteOrFail();
 
+        notify()->success("Category $category->name was removed.");
+
         return redirect()->route('admin.categories.index');
     }
 }

@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "appslabke/lara-izitoast": "^1.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
@@ -17,6 +18,7 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.0",
         "fakerphp/faker": "^1.9.1",
+        "laradumps/laradumps": "^3.0",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.29",
         "mockery/mockery": "^1.4.4",
