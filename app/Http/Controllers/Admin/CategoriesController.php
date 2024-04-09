@@ -18,8 +18,8 @@ class CategoriesController extends Controller
     {
         $categories = Category::with('parent')
             ->withCount(['product'])
-            ->orderByDesc('created_at')
-            ->paginate(5);
+            ->sortable()
+            ->paginate(15);
 
         return view('admin/categories/index', compact('categories'));
     }
@@ -43,6 +43,8 @@ class CategoriesController extends Controller
 
         Category::create($data);
 
+        notify()->success("Category $data[name] was created.");
+
         return redirect()->route('admin.categories.index');
     }
 
@@ -64,6 +66,8 @@ class CategoriesController extends Controller
         $data['slug'] = Str::slug($data['name']);
 
         $category->updateOrFail($data);
+
+        notify()->success("Category $category->name was updated.");
 
         return redirect()->route('admin.categories.index');
     }

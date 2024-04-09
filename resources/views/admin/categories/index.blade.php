@@ -11,10 +11,11 @@
         <table class="table table-dark table-striped">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Parent</th>
-                <th>Usage</th>
+                <th>@sortablelink('id', 'ID')</th>
+                <th>@sortablelink('name', 'Name')</th>
+                <th>@sortablelink('parent_id', 'Parent')</th>
+                <th>@sortablelink('product_count', 'Products')</th>
+                <th>@sortablelink('created_at', 'Created')</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -25,6 +26,7 @@
                     <td>{{$category->name}}</td>
                     <td>{{$category->parent->name ?? '-'}}</td>
                     <td>{{$category->product_count}}</td>
+                    <td>{{$category->created_at}}</td>
                     <td>
                         <form action="{{route('admin.categories.destroy', $category)}}" method="POST">
                             @csrf
