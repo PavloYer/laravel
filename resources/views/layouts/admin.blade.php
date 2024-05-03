@@ -53,8 +53,8 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">All Products</a>
-                                <a class="dropdown-item" href="#">Create Product</a>
+                                <a class="dropdown-item" href="{{route('admin.products.index')}}">All Products</a>
+                                <a class="dropdown-item" href="{{route('admin.products.create')}}">Create Product</a>
                             </div>
                         </li>
                     </ul>
