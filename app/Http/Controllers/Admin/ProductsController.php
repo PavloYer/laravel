@@ -51,8 +51,10 @@ class ProductsController extends Controller
      */
     public function edit(Product $product)
     {
+        $product->load(['images', 'category']);
+
         $categories = Category::all();
-        $productCategories = $product->category()->get()->pluck('id')->toArray();
+        $productCategories = $product->category->pluck('id')->toArray();
 
         return view('admin/products/edit', [
             'product' => $product,

@@ -27,11 +27,10 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         $id = $this->route('product')->id;
-        $SKU = $this->route('product')->SKU;
 
         return [
             'title' => ['required', 'string', 'min:1', 'max: 255', Rule::unique(Product::class, 'title')->ignore($id)],
-            'SKU' => ['required', 'string', 'min:1', 'max: 35', Rule::unique(Product::class, 'SKU')->ignore($SKU)],
+            'SKU' => ['required', 'string', 'min:1', 'max: 35', Rule::unique(Product::class, 'SKU')->ignore($id)],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:1'],
             'new_price' => ['nullable', 'numeric', 'min:1'],

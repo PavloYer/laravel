@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-12 mt-5">
                 <form action="{{route('admin.products.update', $product)}}" method="POST"
-                      class="d-flex align-items-center justify-content-center">
+                      class="d-flex align-items-center justify-content-center" enctype="multipart/form-data">
                     <div class="card w-50">
                         <div class="card-header text-center">
                             <h3>Update product</h3>
@@ -20,7 +20,7 @@
                                 <div class="col-md-6">
                                     <input id="title" type="text"
                                            class="form-control @error('title') is-invalid @enderror" name="title"
-                                           value="{{ old('title') ?? $product->title}}" required>
+                                           value="{{ old('title') ?? $product->title }}" required autofocus>
 
                                     @error('title')
                                     <span class="invalid-feedback" role="alert">
@@ -34,15 +34,26 @@
                                 <label for="SKU" class="col-md-4 col-form-label text-md-end">{{ __('SKU') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="SKU" type="number" minlength="10" maxlength="11"
+                                    <input id="SKU" type="text"
                                            class="form-control @error('SKU') is-invalid @enderror" name="SKU"
-                                           value="{{ old('SKU') ?? $product->SKU}}" required>
+                                           value="{{ old('SKU') ?? $product->SKU }}" required>
 
                                     @error('SKU')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="description"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('Description') }}</label>
+
+                                <div class="col-md-6">
+                                    <textarea id="description" type="text"
+                                              class="form-control" name="description"
+                                    >{{ old('description') ?? $product->description }}</textarea>
                                 </div>
                             </div>
 
@@ -60,12 +71,6 @@
                                             >{{$category->name}}</option>
                                         @endforeach
                                     </select>
-
-                                    @error('categories')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
                                 </div>
                             </div>
 
@@ -73,9 +78,11 @@
                                 <label for="price" class="col-md-4 col-form-label text-md-end">{{ __('Price') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="price" type="number" step="any" min="1"
+                                    <input id="price" type="number"
                                            class="form-control @error('price') is-invalid @enderror" name="price"
-                                           value="{{ old('price') ?? $product->price}}" required>
+                                           value="{{ old('price') ?? $product->price }}"
+                                           step="any"
+                                           required>
 
                                     @error('price')
                                     <span class="invalid-feedback" role="alert">
@@ -90,10 +97,11 @@
                                        class="col-md-4 col-form-label text-md-end">{{ __('New Price') }}</label>
 
                                 <div class="col-md-6">
-                                    <input id="new_price" type="number" step="any" min="1"
+                                    <input id="new_price" type="number"
                                            class="form-control @error('new_price') is-invalid @enderror"
                                            name="new_price"
-                                           value="{{ old('new_price') ?? $product->new_price}}">
+                                           step="any"
+                                           value="{{ old('new_price') ?? $product->new_price }}">
 
                                     @error('new_price')
                                     <span class="invalid-feedback" role="alert">
@@ -110,7 +118,7 @@
                                 <div class="col-md-6">
                                     <input id="quantity" type="number"
                                            class="form-control @error('quantity') is-invalid @enderror" name="quantity"
-                                           value="{{ old('quantity') ?? $product->quantity}}" min="0" required>
+                                           value="{{ old('quantity') ?? $product->quantity }}">
 
                                     @error('quantity')
                                     <span class="invalid-feedback" role="alert">
@@ -120,17 +128,63 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <label for="description"
-                                       class="col-md-4 col-form-label text-md-end">{{ __('Description') }}
-                                </label>
+                            <div class="row text-center mb-3">
+                                <h4>Images</h4>
+                            </div>
 
-                                <div class="col-md-6">
-                                    <textarea class="w-100" id="description" name="description"
-                                    >{{old('description') ?? ($product->description ?? '')}}
-                                    </textarea>
+                            <div class="row mb-3">
+                                <label for="thumbnail"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('Thumbnail') }}</label>
+
+                                <div class="col-12 mb-4 d-flex align-items-center justify-content-center">
+                                    <img src="{{$product->thumbnailUrl}}" id="thumbnail-preview" style="width: 50%;"/>
+                                </div>
+
+                                <div class="col-12">
+                                    <input id="thumbnail" type="file"
+                                           class="form-control @error('thumbnail') is-invalid @enderror"
+                                           name="thumbnail">
+
+                                    @error('thumbnail')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
                                 </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <label for="images"
+                                       class="col-md-4 col-form-label text-md-end">{{ __('Images') }}</label>
+
+                                <div id="images-wrapper" class="col-12 mb-4">
+                                    @foreach($product->images as $image)
+                                        <div
+                                            class="row flex-row mb-4 align-items-center justify-content-center image-item">
+                                            <div class="col-8 col-md-10">
+                                                <img src="{{$image->url}}" style="width: 100%">
+                                            </div>
+                                            <div class="col-4 col-md-2">
+                                                <button class="btn btn-danger image-remove"
+                                                        data-url="{{ route('ajax.image.remove', $image) }}"
+                                                ><i class="fa-regular fa-trash-can"></i></button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="row add-btn-wrapper">
+                                    <div class="col-8">
+                                        <input id="images-upload" type="file" class="d-none form-control" multiple/>
+                                    </div>
+                                    <div class="col-4">
+                                        <button class="btn btn-success image-add"
+                                                data-url="{{ route('ajax.products.image.upload', $product) }}"
+                                        >Add Image <i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+
+                            </div>
+
 
                         </div>
                         <div class="card-footer d-flex justify-content-end">
@@ -142,3 +196,7 @@
         </div>
     </div>
 @endsection
+
+@push('footer-js')
+    @vite(['resources/js/admin/images-preview.js'])
+@endpush
