@@ -35,7 +35,7 @@
                 <td>{{$categories->count()}}</td>
             </tr>
             <tr>
-                <td><a href="#">Products</a></td>
+                <td><a href="{{route('admin.products.index')}}">Products</a></td>
                 <td>{{$products->count()}}</td>
             </tr>
         </tbody>
