@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
 
         User::factory(5)->create();
 
+        (User::factory(1)->create())->first()->syncRoles(Roles::MODERATOR->value);
     }
 
 }
