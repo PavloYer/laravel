@@ -42,7 +42,7 @@ class Product extends Model
         $fileService = app(FIleServiceContract::class);
 
         if (!empty($this->attributes['thumbnail'])) {
-            $fileService->delete($this->attributes['thumbnail']);
+            $fileService->remove($this->attributes['thumbnail']);
         }
 
         $this->attributes['thumbnail'] = $fileService->upload(

@@ -89,26 +89,15 @@ class ProductsTest extends TestCase
         $response->assertViewIs('admin.products.edit');
     }
 
-    /*public function test_allow_see_edit_products_view_with_role_moderator()
-    {
-        $response = $this->actingAs($this->user(Roles::MODERATOR))
-            ->get(route('admin.products.edit'));
-
-        $response->assertSuccessful();
-        $response->assertViewIs('admin.products.edit');
-    }
-
-    public function test_doesnt_allow_see_edit_products_view_with_role_customer()
-    {
-        $response = $this->actingAs($this->user(Roles::CUSTOMER))
-            ->get(route('admin.products.edit'));
-
-        $response->assertForbidden();
-    }*/
-
     protected function createProduct(string $imagePath): array
     {
         $image = UploadedFile::fake()->image($imagePath);
+
+        /*
+        $data = Product::factory()->make();
+        $data->{'thumbnail'} = $image;
+        $data->{'slug'} = Str::slug($data['title']);
+        */
 
         $data = array_merge(Product::factory()->make()->toArray(),
             ['thumbnail' => $image]);
