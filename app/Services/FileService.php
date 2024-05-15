@@ -12,6 +12,10 @@ class FileService implements Contract\FIleServiceContract
 
     public function upload(string|UploadedFile $file, $additionalPath = ''): string
     {
+        if (is_string($file)) {
+            return str_replace('public/storage', '', $file);
+        }
+
         $additionalPath = !empty($additionalPath) ? $additionalPath . '/' : '';
         $filePath = $additionalPath . Str::random() . time() . '.' . $file->getClientOriginalExtension();
         Storage::put($filePath, File::get($file));
