@@ -222,6 +222,8 @@ class CategoriesTest extends TestCase
         $response = $this->actingAs($this->user())
             ->delete(route('admin.categories.destroy', $category));
 
-        $response->assertNotFound();
+        $response->assertStatus(404);
+        $this->assertDatabaseHas(Category::class,
+            ['name' => $category->name]);
     }
 }

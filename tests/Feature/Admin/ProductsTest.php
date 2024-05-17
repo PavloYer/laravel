@@ -80,7 +80,7 @@ class ProductsTest extends TestCase
 
     public function test_allow_see_edit_products_view_with_role_admin()
     {
-        $product = $this->createProduct('test_image.png');
+        $product = Product::factory()->create();
 
         $response = $this->actingAs($this->user())
             ->get(route('admin.products.edit', $product));
@@ -89,15 +89,91 @@ class ProductsTest extends TestCase
         $response->assertViewIs('admin.products.edit');
     }
 
+    public function test_allow_see_edit_products_view_with_role_moderator()
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->actingAs($this->user(Roles::MODERATOR))
+            ->get(route('admin.products.edit', $product));
+
+        $response->assertSuccessful();
+        $response->assertViewIs('admin.products.edit');
+    }
+
+    public function test_doesnt_allow_see_edit_products_view_with_role_customer()
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->actingAs($this->user(Roles::CUSTOMER))
+            ->get(route('admin.products.edit', $product));
+
+        $response->assertForbidden();
+    }
+
+    public function test_update_products()
+    {
+        $product = Product::factory()->create();
+
+        $data = $this->createProduct('test.png');
+        $this->mockFileService($data['slug'], 'test.png');
+
+        $response = $this->actingAs($this->user())
+            ->put(route('admin.products.update', $product), $data);
+
+        $product->refresh();
+
+        $this->assertDatabaseHas(Product::class, [
+            'title' => $data['title'],
+            'thumbnail' => "$data[slug]/test.png"
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirectToRoute('admin.products.index');
+
+        $response->assertSessionHas('toasts');
+        $response->assertSessionHas('toasts', function ($collection) use ($data) {
+            return $collection->first()['message'] == "Product '$data[title]' was updated";
+        });
+    }
+
+    public function test_delete_existing_products()
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->actingAs($this->user())
+            ->delete(route('admin.products.destroy', $product), $product->toArray());
+
+        $this->assertDatabaseMissing(Product::class, [
+            'title' => $product['title'],
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertRedirectToRoute('admin.products.index');
+
+        $response->assertSessionHas('toasts');
+        $response->assertSessionHas('toasts', function ($collection) use ($product) {
+            return $collection->first()['message'] == "Product '$product[title]' was deleted";
+        });
+    }
+
+    public function test_doesnt_delete_not_existing_products()
+    {
+        $product = Product::factory()->create();
+        $product->id = -1;
+
+        $response = $this->actingAs($this->user())
+            ->delete(route('admin.products.destroy', $product), $product->toArray());
+
+        $this->assertDatabaseHas(Product::class, [
+            'title' => $product['title'],
+        ]);
+
+        $response->assertStatus(404);
+    }
+
     protected function createProduct(string $imagePath): array
     {
         $image = UploadedFile::fake()->image($imagePath);
-
-        /*
-        $data = Product::factory()->make();
-        $data->{'thumbnail'} = $image;
-        $data->{'slug'} = Str::slug($data['title']);
-        */
 
         $data = array_merge(Product::factory()->make()->toArray(),
             ['thumbnail' => $image]);
