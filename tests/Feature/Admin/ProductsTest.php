@@ -117,6 +117,11 @@ class ProductsTest extends TestCase
         $data = $this->createProduct('test.png');
         $this->mockFileService($data['slug'], 'test.png');
 
+//        $this->mock(FileService::class, function (MockInterface $mock) use ($product) {
+//            $mock->shouldReceive('remove');
+//        });
+
+
         $response = $this->actingAs($this->user())
             ->put(route('admin.products.update', $product), $data);
 
