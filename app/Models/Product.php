@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\Contract\FIleServiceContract;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,5 +67,20 @@ class Product extends Model
             }
             return Storage::url($this->attributes['thumbnail']);
         });
+    }
+
+    public function isAvailable(): Attribute
+    {
+        return Attribute::get(fn() => $this->attributes['quantity'] > 0);
+    }
+
+    public function rowId(): Attribute
+    {
+        return Attribute::get(fn() => Cart::instance('cart')->content()->where('id', '=', $this->id)?->first()?->rowId);
+    }
+
+    public function isInCart(): Attribute
+    {
+        return Attribute::get(fn() => (bool) $this->rowId);
     }
 }

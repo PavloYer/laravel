@@ -24,7 +24,9 @@
             <a class="navbar-brand" href="{{ url('/') }}">
                 {{ config('app.name', 'Laravel') }}
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -39,6 +41,16 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ms-auto">
                     <!-- Authentication Links -->
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" style="font-size: 24px;" href="{{ route('cart.index') }}">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span
+                                style="font-size: 10px;"
+                                class="position-absolute top-20 start-90 translate-middle badge rounded-pill bg-info">
+                                {{Cart::instance('cart')->countItems()}}
+                              </span>
+                        </a>
+                    </li>
                     @guest
                         @if (Route::has('login'))
                             <li class="nav-item">
@@ -53,7 +65,8 @@
                         @endif
                     @else
                         <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->first_name }}
                             </a>
 
@@ -84,5 +97,6 @@
 </div>
 <script src="{{ asset('js/iziToast.js') }}"></script>
 @include('vendor.lara-izitoast.toast')
+@stack('footer-js')
 </body>
 </html>
